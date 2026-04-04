@@ -1,0 +1,35 @@
+# ============================================================
+# QLoRA Financial Sentiment Analysis — Dependencies
+# ============================================================
+# PyTorch (core deep learning framework)
+torch>=2.1.0
+
+# Hugging Face Transformers (model loading, tokenization, Trainer)
+# >=4.48.0 required for ModernBERT support
+transformers>=4.48.0
+
+# PEFT — Parameter-Efficient Fine-Tuning (LoRA, QLoRA adapters)
+peft>=0.12.0
+
+# TRL — Transformer Reinforcement Learning (optional, for SFTTrainer)
+trl>=0.9.0
+
+# bitsandbytes — 4-bit / 8-bit quantization (QLoRA backbone)
+# NOTE: Requires CUDA GPU. Will not work on CPU-only systems.
+bitsandbytes>=0.43.0
+
+# Accelerate — Distributed training & mixed precision utilities
+accelerate>=0.30.0
+
+# Hugging Face Datasets — For loading Financial PhraseBank
+datasets>=2.19.0
+
+# Data processing & evaluation
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+
+# Web deployment
+streamlit>=1.28.0
+torchvision>=0.16.0
