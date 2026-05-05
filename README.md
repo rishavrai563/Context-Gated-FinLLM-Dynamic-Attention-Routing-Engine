@@ -6,7 +6,10 @@
 The financial industry generates vast amounts of news and data every day, which can significantly impact market sentiment.
 
 ### Objective: 
-Develop a financial news sentiment analysis system using Bidirectional LSTM to classify news articles into positive or negative sentiment categories.
+Develop a highly accurate financial news sentiment analysis system using modern deep learning architectures.
 
 ### Methodology (V1 - Bi-LSTM): 
-The proposed system uses a Bidirectional LSTM to analyze and classify financial news articles based on their sentiment. The system is trained on a dataset of financial news articles.
+The original system used a Bidirectional LSTM.
+
+### Methodology (V2 - FinBERT):
+Upgraded the architecture to use ProsusAI/finbert, a domain-specific Transformer model. This provides significantly better contextual understanding of financial terminology compared to the legacy Bi-LSTM.
