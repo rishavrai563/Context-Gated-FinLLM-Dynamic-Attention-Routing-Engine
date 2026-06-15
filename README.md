@@ -12,6 +12,7 @@ Develop a highly accurate, State-of-the-Art (SOTA) financial news sentiment anal
 1. **V1 (Bi-LSTM):** Initial legacy implementation using Keras.
 2. **V2 (FinBERT):** Migrated to a domain-specific Transformer (ProsusAI/finbert) via full fine-tuning.
 3. **V3 (ModernBERT + QLoRA):** Implemented Parameter-Efficient Fine-Tuning (PEFT) on a 2024 SOTA encoder (`answerdotai/ModernBERT-base`). Uses 4-bit NF4 quantization to dramatically reduce VRAM usage while maintaining full fine-tuning quality.
+4. **V4 (Generative Instruction Tuning):** Transitioned to a Decoder LLM (`meta-llama/Meta-Llama-3-8B-Instruct`) using `trl.SFTTrainer`. Added a Global System Prompt for **Contextual Gating** (Sector Routing Rules) to eliminate Semantic Domain Inversion. The model natively outputs structured JSON schema `{"sentiment": "...", "reasoning_token_focus": "..."}`.
 
 ### Deployment:
 A low-latency Streamlit web application is provided for real-time inference using dynamically merged LoRA adapters.
