@@ -1,13 +1,4 @@
-"""
-=============================================================================
-QLoRA Financial Sentiment Analysis — Low-Latency Inference Deployment
-=============================================================================
-This script provides an optimized Streamlit web interface for financial news
-sentiment analysis using a QLoRA-fine-tuned Llama-3-8B model.
 
-Inference Engine: llama-cpp-python (GGUF) for GPU-accelerated local inference
-on consumer GPUs (RTX 3050 6GB+).
-"""
 
 import os
 os.environ["HF_HOME"] = "/media/rishi/New Volume F/Sentiment Analysis/Llama weights"
@@ -15,8 +6,9 @@ os.environ["HF_HOME"] = "/media/rishi/New Volume F/Sentiment Analysis/Llama weig
 import time
 import json
 import streamlit as st
+from hybrid_routing_engine import HybridSentimentEngine
 
-# ── Model Configuration ──────────────────────────────────────────────────────
+# Model Configuration
 # Points to YOUR fine-tuned merged GGUF model on Hugging Face Hub
 GGUF_REPO = "rishi563/llama3-financial-sentiment-gguf"
 GGUF_FILE = "llama-3-8b-instruct.Q4_K_M.gguf"
@@ -76,145 +68,127 @@ def load_model():
     return llm, device_info
 
 
-def predict_sentiment(headline, llm):
-    """Run GPU-accelerated inference using strict rules and prompt injection."""
-    start = time.perf_counter()
-
-    # 1. STRICTER SYSTEM PROMPT: Use rules to force the quantitative logic
-    system_prompt = (
-        "You are a Quantitative Finance Sentiment Engine. "
-        "YOUR RULES ARE ABSOLUTE:\n"
-        "1. IF 'guidance', 'outlook', or 'forecast' is lowered or cut: SENTIMENT IS NEGATIVE.\n"
-        "2. IF 'beat' or 'record' exists, IGNORE IT if a guidance cut is present.\n"
-        "3. Output ONLY a valid JSON object. No other text.\n"
-        "Format: {'sentiment': 'POSITIVE'|'NEGATIVE'|'NEUTRAL', 'reasoning_token_focus': '...'}"
-    )
-
-    # 2. PROMPT INJECTION: Force the model to think before it speaks and start the JSON
-    formatted_prompt = (
-        f"<|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|>"
-        f"<|start_header_id|>user<|end_header_id|>\n\nHeadline: {headline}\n\n"
-        f"Step 1: Check for guidance cuts.\n"
-        f"Step 2: Determine sentiment based on rules.\n"
-        f"Step 3: Output JSON.<|eot_id|>"
-        f"<|start_header_id|>assistant<|end_header_id|>\n\n{{"
-    )
-
-    # Use create_completion instead of chat_completion for prompt injection
-    response = llm.create_completion(
-        prompt=formatted_prompt,
-        max_tokens=128,
-        temperature=0.0,
-        top_p=1.0,
-        stop=["<|eot_id|>"]
-    )
-
-    # Re-attach the '{' that we forced the model to start with
-    assistant_output = "{" + response["choices"][0]["text"].strip()
-    latency_ms = (time.perf_counter() - start) * 1000
-
-    print(f"\n--- RAW MODEL OUTPUT ---\n{assistant_output}\n------------------------\n")
-
-    # Parse JSON output — extract JSON block from surrounding chat text
-    sentiment = "neutral"
-    reasoning = "No reasoning provided."
-    data = {}
-    
-    def extract_json(text):
-        """Extract the outermost JSON object by counting braces (handles nesting)."""
-        start_idx = text.find('{')
-        if start_idx == -1:
-            return None
-        depth = 0
-        for i in range(start_idx, len(text)):
-            if text[i] == '{':
-                depth += 1
-            elif text[i] == '}':
-                depth -= 1
-                if depth == 0:
-                    return text[start_idx:i+1]
-        return None
-    
-    # Try direct parse first, then brace-counting extraction
-    try:
-        data = json.loads(assistant_output)
-        sentiment = data.get("sentiment", "neutral").lower()
-        reasoning = data.get("reasoning_token_focus", reasoning)
-    except json.JSONDecodeError:
-        # Model wrapped JSON in conversational text — extract with brace counting
-        json_str = extract_json(assistant_output)
-        if json_str:
-            try:
-                data = json.loads(json_str)
-                sentiment = data.get("sentiment", "neutral").lower()
-                
-                # Extract the full conversational reasoning by removing the JSON block
-                import re
-                full_text = assistant_output.replace(json_str, "").strip()
-                # Clean up leftover prefixes like "Reasoning:" or "Here is the analysis:"
-                full_text = re.sub(r'^(Here is the analysis:|Reasoning:)\s*', '', full_text, flags=re.IGNORECASE).strip()
-                
-                if full_text:
-                    reasoning = full_text
-                else:
-                    reasoning = data.get("reasoning_token_focus", reasoning)
-            except json.JSONDecodeError:
-                reasoning = f"Parse failed. Raw: {assistant_output}"
-        else:
-            # Last resort: scan for sentiment keywords directly
-            lower_out = assistant_output.lower()
-            if "negative" in lower_out:
-                sentiment = "negative"
-            elif "positive" in lower_out:
-                sentiment = "positive"
-            reasoning = f"Extracted from raw output: {assistant_output[:200]}"
-
-    # Extract confidence scores
-    confidence = {"positive": 0, "negative": 0, "neutral": 0}
-    if sentiment != "neutral" or reasoning != "No reasoning provided.":
-        try:
-            conf_data = data.get("confidence_scores", {})
-            confidence["positive"] = int(conf_data.get("positive", 0))
-            confidence["negative"] = int(conf_data.get("negative", 0))
-            confidence["neutral"] = int(conf_data.get("neutral", 0))
-        except Exception:
-            pass
-    
-    # If no confidence scores, generate reasonable defaults from sentiment
-    if sum(confidence.values()) == 0:
-        if sentiment == "positive":
-            confidence = {"positive": 78, "negative": 8, "neutral": 14}
-        elif sentiment == "negative":
-            confidence = {"positive": 7, "negative": 80, "neutral": 13}
-        else:
-            confidence = {"positive": 20, "negative": 15, "neutral": 65}
-
-    return {
-        "label": sentiment,
-        "reasoning": reasoning,
-        "confidence": confidence,
-        "latency_ms": round(latency_ms, 2),
-    }
-
 
 def main():
     """Streamlit application for financial sentiment analysis."""
     st.set_page_config(
-        page_title="Financial Sentiment — Llama-3 QLoRA",
-        page_icon="📊",
+        page_title="Financial Sentiment — Quant AI",
+        page_icon="⚡",
         layout="centered",
     )
-    st.title("📊 Generative Financial Sentiment Analysis")
-    st.markdown(
-        "Powered by **Llama-3-8B + Contextual Gating QLoRA** — "
-        "Outputs structured JSON containing sentiment and reasoning based on sector routing.\n\n"
-        "Enter a financial news headline to analyze."
-    )
     
-    with st.spinner("Loading Llama-3-8B GGUF model... (first run downloads ~5 GB)"):
-        llm, device_info = load_model()
+    # Custom CSS for Premium UI
+    st.markdown("""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        
+        /* Base Theme */
+        .stApp {
+            background-color: #0B0F19;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Hero Section */
+        .hero-container {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: radial-gradient(100% 100% at 50% 0%, rgba(16, 185, 129, 0.1) 0%, rgba(11, 15, 25, 0) 100%);
+            border-radius: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: #111827;
+            color: #10B981;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #F3F4F6;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-title span {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: #9CA3AF;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Input & Button Styling */
+        .stTextArea textarea {
+            background-color: #111827 !important;
+            border: 1px solid #1F2937 !important;
+            color: #F3F4F6 !important;
+            border-radius: 1rem !important;
+            padding: 1.25rem !important;
+            font-size: 1.1rem !important;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+        
+        .stTextArea textarea:focus {
+            border-color: #10B981 !important;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
+        }
+        
+        .stButton button {
+            background: linear-gradient(135deg, #111827 0%, #1F2937 100%) !important;
+            color: white !important;
+            border: 1px solid #374151 !important;
+            border-radius: 9999px !important;
+            padding: 0.75rem 2rem !important;
+            font-weight: 600 !important;
+            font-size: 1.1rem !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
+            margin-top: 1rem;
+        }
+        
+        .stButton button:hover {
+            border-color: #10B981 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.2) !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-    st.caption(f"🖥️ Device: {device_info}")
+    # Render Hero Section
+    st.markdown("""
+        <div class="hero-container">
+            <div class="hero-badge">● LLAMA-3 8B LIVE</div>
+            <div class="hero-title">Analyze Markets.<br><span>With AI Precision.</span></div>
+            <div class="hero-subtitle">This is a quantitative finance engine. Input a headline, instantly detect market sentiment, and secure your trades with absolute certainty.</div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    with st.spinner("Loading AI Engine..."):
+        llm, device_info = load_model()
+        router = HybridSentimentEngine(llm)
+
+    st.caption(f"🖥️ Device: {device_info} • Hybrid Routing: Fast-Path + Heavy LLM")
     st.markdown("---")
     
     text_input = st.text_area(
@@ -233,13 +207,14 @@ def main():
     )
     
     if analyze_clicked and text_input.strip():
-        with st.spinner("Analyzing..."):
-            result = predict_sentiment(text_input.strip(), llm)
+        with st.spinner("Routing headline through Hybrid Engine..."):
+            result = router.analyze(text_input.strip())
 
         label = result["label"]
         reasoning = result["reasoning"]
         latency = result["latency_ms"]
         confidence = result["confidence"]
+        engine_used = result.get("engine_used", "Unknown")
         
         emoji = SENTIMENT_EMOJI.get(label, "➡️")
         color = SENTIMENT_COLORS.get(label, "#FFD600")
@@ -260,15 +235,16 @@ def main():
                 <p style="font-size: 16px; margin: 10px 0 0 0; color: #eee; line-height: 1.5;">
                     <strong>Reasoning Focus:</strong> {reasoning}
                 </p>
-                <p style="font-size: 14px; margin: 10px 0 0 0; color: #aaa;">
-                    Latency: <strong>{latency:.1f}ms</strong>
-                </p>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                    <span style="font-size: 13px; color: #aaa;">Engine: <strong style="color: #10B981;">{engine_used}</strong></span>
+                    <span style="font-size: 13px; color: #aaa;">Latency: <strong>{latency:.1f}ms</strong></span>
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        # ── Confidence Score Bars ─────────────────────────────────────
+        # Confidence Score Bars
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("##### 📊 Confidence Distribution")
         
@@ -311,7 +287,7 @@ def main():
     st.markdown("---")
     st.caption(
         "Built with Streamlit • Model: Llama-3-8B-Instruct (GGUF Q4_K_M) • "
-        "Engine: llama.cpp GPU-accelerated inference"
+        "Engine: Hybrid Routing (Fast-Path + llama.cpp GPU-accelerated inference)"
     )
 
 if __name__ == "__main__":

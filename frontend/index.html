@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSentient — AI-Powered Financial Sentiment Engine</title>
+    <meta name="description" content="Quantitative financial news sentiment analysis powered by a fine-tuned Llama-3-8B model with hybrid routing architecture.">
+    <link href="templatemo-3d-coverflow.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <a href="#home" class="logo-container">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="15" y="55" width="12" height="30" rx="3" fill="url(#grad1)" />
+                    <rect x="33" y="35" width="12" height="50" rx="3" fill="url(#grad1)" />
+                    <rect x="51" y="20" width="12" height="65" rx="3" fill="url(#grad1)" />
+                    <rect x="69" y="40" width="12" height="45" rx="3" fill="url(#grad1)" />
+                    <polyline points="15,50 33,30 51,15 69,35 85,20" fill="none" stroke="url(#grad1)" stroke-width="3" stroke-linecap="round" />
+                    <circle cx="85" cy="20" r="5" fill="#10B981" />
+                </svg>
+            </div>
+            <div class="logo-text">FinSentient</div>
+        </a>
+        
+        <nav class="main-menu" id="mainMenu">
+            <a href="#home" class="menu-item active">Home</a>
+            <a href="#about" class="menu-item">Architecture</a>
+            <a href="#contact" class="menu-item">Try It</a>
+            <a href="https://github.com/rishavrai563/Context-Gated-FinLLM-Dynamic-Attention-Routing-Engine" target="_blank" rel="noopener noreferrer" class="menu-item external">GitHub</a>
+        </nav>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Home Section — 3D Coverflow Showcase -->
+    <section id="home" class="section">
+        <div class="coverflow-wrapper">
+            <div class="info">
+                <h2 id="current-title">Global Markets Dashboard</h2>
+                <p id="current-description">Real-time trading analytics powered by AI sentiment detection</p>
+            </div>
+
+            <div class="coverflow-container" tabindex="0">
+                <div class="coverflow" id="coverflow">
+                    <div class="coverflow-item" data-index="0">
+                        <div class="cover image-loading">
+                            <img src="images/trading-dashboard.png" alt="Global Markets Dashboard">
+                        </div>
+                        <div class="reflection"></div>
+                    </div>
+                    <div class="coverflow-item" data-index="1">
+                        <div class="cover image-loading">
+                            <img src="images/ai-neural-network.png" alt="AI Neural Network">
+                        </div>
+                        <div class="reflection"></div>
+                    </div>
+                    <div class="coverflow-item" data-index="2">
+                        <div class="cover image-loading">
+                            <img src="images/sentiment-feed.png" alt="Sentiment Analysis Feed">
+                        </div>
+                        <div class="reflection"></div>
+                    </div>
+                    <div class="coverflow-item" data-index="3">
+                        <div class="cover image-loading">
+                            <img src="images/wall-street-bull.png" alt="Wall Street Bull">
+                        </div>
+                        <div class="reflection"></div>
+                    </div>
+                    <div class="coverflow-item" data-index="4">
+                        <div class="cover image-loading">
+                            <img src="images/market-globe.png" alt="Global Market Globe">
+                        </div>
+                        <div class="reflection"></div>
+                    </div>
+                </div>
+
+                <button class="nav-button prev" onclick="navigate(-1)">‹</button>
+                <button class="nav-button next" onclick="navigate(1)">›</button>
+
+                <div class="dots-container" id="dots"></div>
+                
+                <button class="play-pause-button" id="playPauseBtn" onclick="toggleAutoplay()">
+                    <span class="play-icon">▶</span>
+                    <span class="pause-icon" style="display: none;">❚❚</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About / Architecture Section -->
+    <section class="philosophy-section section" id="about">
+        <div class="philosophy-container">
+            <div class="prism-line"></div>
+            
+            <h2 class="philosophy-headline">
+                Hybrid Routing<br>Architecture
+            </h2>
+            
+            <p class="philosophy-subheading">
+                A Wall Street-inspired two-tier inference pipeline that routes headlines through a lightning-fast regex sieve before escalating complex cases to a fine-tuned Llama-3-8B model.
+            </p>
+            
+            <div class="philosophy-pillars">
+                <div class="pillar">
+                    <div class="pillar-icon">⚡</div>
+                    <h3 class="pillar-title">Fast-Path Sieve</h3>
+                    <p class="pillar-description">
+                        Algorithmic screening executing in ~2ms. Filters out simple sentiment cases to conserve heavy compute resources for ambiguous market news.
+                    </p>
+                </div>
+                
+                <div class="pillar">
+                    <div class="pillar-icon">🧠</div>
+                    <h3 class="pillar-title">Context-Gated FinLLM</h3>
+                    <p class="pillar-description">
+                        Deep quantitative reasoning using a locally-deployed Llama-3-8B GGUF model with custom Prompt Injection to force strict JSON-only trading signals.
+                    </p>
+                </div>
+                
+                <div class="pillar">
+                    <div class="pillar-icon">🛠️</div>
+                    <h3 class="pillar-title">Efficient Hardware</h3>
+                    <p class="pillar-description">
+                        Optimized utilizing 4-bit quantization and dual GPU/CPU offloading to maintain peak institutional-grade analysis within an incredibly small 6GB VRAM footprint.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="philosophy-particles" id="particles">
+                <!-- Particles will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Try It / Contact Section -->
+    <section id="contact" class="section">
+        <div class="contact-content">
+            <div class="contact-header">
+                <h2>Analyze a Headline</h2>
+                <p>Enter any financial news headline below. The Hybrid Routing Engine will classify it in real-time.</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info-section">
+                    <h3>How It Works</h3>
+                    <p>Headlines are first scanned by a lightning-fast regex sieve (~2ms). If paradox triggers like "inflation", "guidance cut", or "despite" are detected, the headline is escalated to the heavy Llama-3-8B model for deep quantitative analysis.</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 1.45-.39 2.81-1.06 3.99l1.73 1c.83-1.49 1.33-3.19 1.33-5C22 6.82 18.05 2.55 13 2.05zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05C5.94 2.55 2 6.81 2 12c0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-1.73-1A7.98 7.98 0 0112 19z" fill="white"/></svg>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Fast-Path Engine</h4>
+                                <p>Regex keyword scanner — ~2ms latency</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.5-9.11 0-12.58 3.51-3.47 9.14-3.49 12.65 0L21 3v7.12z" fill="white"/></svg>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Heavy LLM Path</h4>
+                                <p>Llama-3-8B GGUF — deep paradox analysis</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" fill="white"/></svg>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Built By</h4>
+                                <p>Rishav Rai — AI/ML Engineer</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <h4>Connect</h4>
+                        <div class="social-buttons">
+                            <a href="https://github.com/rishavrai563" target="_blank" class="social-btn" title="GitHub">
+                                <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                            </a>
+                            <a href="https://www.linkedin.com/in/rishavrai563" target="_blank" class="social-btn" title="LinkedIn">
+                                <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            </a>
+                            <a href="https://huggingface.co/rishi563" target="_blank" class="social-btn" title="Hugging Face">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 13.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm7 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-1-4c0 .28-.22.5-.5.5h-7a.5.5 0 010-1h7c.28 0 .5.22.5.5z" fill="white"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-section">
+                    <form class="contact-form" id="sentimentForm" onsubmit="handleSentimentAnalysis(event)">
+                        <div class="form-group">
+                            <label for="headline">Financial News Headline</label>
+                            <textarea id="headline" name="headline" required placeholder="e.g., Carnival Corp. delivered record Q2 profits but stock fell 6% as management cut full-year guidance due to geopolitical disruptions" style="min-height: 120px; resize: vertical;"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn" id="analyzeBtn">⚡ Analyze Sentiment</button>
+                    </form>
+
+                    <!-- Results Panel -->
+                    <div id="resultsPanel" style="display: none; margin-top: 30px;">
+                        <div id="sentimentCard" style="padding: 25px; border-radius: 15px; border-left: 5px solid; margin-bottom: 20px;">
+                            <h3 id="sentimentLabel" style="margin: 0 0 10px 0; font-size: 28px;"></h3>
+                            <p id="sentimentReasoning" style="font-size: 15px; color: rgba(255,255,255,0.8); line-height: 1.6; margin: 0 0 15px 0;"></p>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span id="engineUsed" style="font-size: 13px; color: rgba(255,255,255,0.6);"></span>
+                                <span id="latencyDisplay" style="font-size: 13px; color: rgba(255,255,255,0.6);"></span>
+                            </div>
+                        </div>
+                        <!-- Confidence Bars -->
+                        <div id="confidenceBars" style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-copyright">
+                © 2026 FinSentient — Context-Gated FinLLM. Built by <a href="https://github.com/rishavrai563" target="_blank" rel="noopener noreferrer">Rishav Rai</a>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/rishavrai563/Context-Gated-FinLLM-Dynamic-Attention-Routing-Engine" target="_blank">Source Code</a>
+                <a href="https://huggingface.co/rishi563/llama3-financial-sentiment-gguf" target="_blank">Model on HF</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="scroll-to-top" id="scrollToTop">
+        <span>↑</span>
+    </div>
+
+<script src="templatemo-3d-coverflow-scripts.js"></script>
+
+<script>
+function initParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (18 + Math.random() * 8) + 's';
+        particlesContainer.appendChild(particle);
+    }
+}
+document.addEventListener("DOMContentLoaded", initParticles);
+
+// Sentiment analysis handler (connects to FastAPI backend)
+async function handleSentimentAnalysis(e) {
+    e.preventDefault();
+    const headline = document.getElementById('headline').value.trim();
+    if (!headline) return;
+
+    const btn = document.getElementById('analyzeBtn');
+    btn.textContent = '🔄 Analyzing...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('http://localhost:8000/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ headline: headline })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const result = await response.json();
+        displayResult(result);
+    } catch (error) {
+        console.error('Error analyzing sentiment:', error);
+        alert('Error connecting to sentiment backend. Is the FastAPI server running on port 8000?');
+    } finally {
+        btn.textContent = '⚡ Analyze Sentiment';
+        btn.disabled = false;
+    }
+}
+
+function displayResult(r) {
+    const panel = document.getElementById('resultsPanel');
+    const card = document.getElementById('sentimentCard');
+    const colors = { positive: '#00C853', negative: '#FF1744', neutral: '#FFD600' };
+    const emojis = { positive: '📈', negative: '📉', neutral: '➡️' };
+    const c = colors[r.label] || '#FFD600';
+
+    card.style.background = `linear-gradient(135deg, ${c}22, ${c}11)`;
+    card.style.borderLeftColor = c;
+    document.getElementById('sentimentLabel').innerHTML = `${emojis[r.label] || '➡️'} ${r.label.toUpperCase()} Sentiment`;
+    document.getElementById('sentimentLabel').style.color = c;
+    document.getElementById('sentimentReasoning').textContent = r.reasoning;
+    document.getElementById('engineUsed').innerHTML = `Engine: <strong style="color:#10B981">${r.engine}</strong>`;
+    document.getElementById('latencyDisplay').innerHTML = `Latency: <strong>${r.latency.toFixed(1)}ms</strong>`;
+
+    const barsDiv = document.getElementById('confidenceBars');
+    barsDiv.innerHTML = '<h4 style="margin:0 0 15px 0; font-size:16px; color:rgba(255,255,255,0.9);">📊 Confidence Distribution</h4>';
+    const barData = [['Positive', r.confidence.positive, '#00C853'], ['Negative', r.confidence.negative, '#FF1744'], ['Neutral', r.confidence.neutral, '#FFD600']];
+    for (const [lbl, pct, col] of barData) {
+        barsDiv.innerHTML += `<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:#ccc;font-size:14px;font-weight:600">${lbl}</span><span style="color:${col};font-size:14px;font-weight:700">${pct}%</span></div><div style="background:#1a1a2e;border-radius:8px;height:12px;overflow:hidden"><div style="width:${pct}%;height:100%;background:linear-gradient(90deg,${col}88,${col});border-radius:8px;transition:width 0.6s ease"></div></div></div>`;
+    }
+
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+
+</body>
+</html>
